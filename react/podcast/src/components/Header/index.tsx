@@ -1,6 +1,5 @@
-// import {  } from "date-fms";
-import format from "date-fms/format";
-import ptBR from "date-fms/locale/pt-BR";
+import format from "date-fns/format";
+import ptBR from "date-fns/locale/pt-BR";
 import styles from "./styles.module.scss";
 
 function Header() {

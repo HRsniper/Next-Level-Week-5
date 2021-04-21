@@ -1,9 +1,9 @@
-import { Header } from "../components/Header";
+import { Header, Player } from "../components";
 
 function Home() {
   return (
     <main>
-      <Header />
+      
     </main>
   );
 }
