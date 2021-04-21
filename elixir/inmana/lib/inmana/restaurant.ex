@@ -12,6 +12,8 @@ defmodule Inmana.Restaurant do
     field :email, :string
     field :name, :string
 
+    has_many :supplies, Inmana.Supply
+
     timestamps()
   end
 
