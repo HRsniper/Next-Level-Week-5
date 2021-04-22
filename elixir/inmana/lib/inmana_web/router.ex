@@ -32,4 +32,9 @@ defmodule InmanaWeb.Router do
       live_dashboard "/dashboard", metrics: InmanaWeb.Telemetry
     end
   end
+
+# view sends of email in development
+  if Mix.env() in [:dev] do
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
+  end
 end
