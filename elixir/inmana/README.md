@@ -17,9 +17,12 @@ Endpoints:
 - [GET `localhost:4000/api/supplies/:id`](http://localhost:4000/api/supplies/:id)
 - [GET `localhost:4000/sent_emails`](http://localhost:4000/sent_emails)
 
+Coveralls: [`cover/excoveralls.html`]()
+
 ```
 #missaoespacial
 #embuscadoproximonivel
 #astronautas
 #universoinfinito
+#missaocumprida
 ```
