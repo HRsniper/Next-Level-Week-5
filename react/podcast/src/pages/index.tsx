@@ -2,25 +2,11 @@ import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { GetStaticProps } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { EpisodeType } from "../@types/episode";
 import { api } from "../services/api";
 import styles from "../styles/home.module.scss";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
-
-type FileType = {
-  url: string;
-  type: string;
-  duration: number;
-};
-
-type EpisodeType = {
-  id: string;
-  title: string;
-  members: string;
-  published_at: string;
-  thumbnail: string;
-  description: string;
-  file: FileType;
-};
 
 type DurationAsStringAndUrl = {
   durationAsString: string;
@@ -45,7 +31,9 @@ function Home({ allEpisodes, latestEpisodes }: HomeProps) {
                 <Image src={episode.thumbnail} alt={episode.title} width={192} height={192} objectFit="cover" />
 
                 <div className={styles.episodeDetails}>
-                  <a href={episode.url}>{episode.title}</a>
+                  <Link href={`/episode/${episode.id}`}>
+                    <a>{episode.title}</a>
+                  </Link>
                   <p>{episode.members}</p>
                   <span>{episode.published_at}</span>
                   <span>{episode.durationAsString}</span>
@@ -63,12 +51,14 @@ function Home({ allEpisodes, latestEpisodes }: HomeProps) {
       <section className={styles.allEpisodes}>
         <table cellSpacing={0}>
           <thead>
-            <th></th>
-            <th>Podcast</th>
-            <th>Integrantes</th>
-            <th>Data</th>
-            <th>Duração</th>
-            <th></th>
+            <tr>
+              <th></th>
+              <th>Podcast</th>
+              <th>Integrantes</th>
+              <th>Data</th>
+              <th>Duração</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             {allEpisodes.map((episode) => {
@@ -78,7 +68,9 @@ function Home({ allEpisodes, latestEpisodes }: HomeProps) {
                     <Image src={episode.thumbnail} alt={episode.title} width={120} height={120} objectFit="cover" />
                   </td>
                   <td>
-                    <a href={episode.url}>{episode.title}</a>
+                    <Link href={`/episode/${episode.id}`}>
+                      <a>{episode.title}</a>
+                    </Link>
                   </td>
                   <td>{episode.members}</td>
                   <td className={styles.tdPublishedAt}>{episode.published_at}</td>
@@ -116,7 +108,7 @@ const getStaticProps: GetStaticProps = async () => {
       members: episode.members,
       published_at: format(parseISO(episode.published_at), "d MMM yy", { locale: ptBR }),
       thumbnail: episode.thumbnail,
-      description: episode.description,
+      // description: episode.description,
       duration: Number(episode.file.duration),
       durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
       url: episode.file.url
