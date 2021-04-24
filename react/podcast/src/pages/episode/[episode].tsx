@@ -1,6 +1,8 @@
 import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { EpisodeType } from "../../@types/episode";
 import { api } from "../../services/api";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
@@ -10,20 +12,58 @@ type EpisodeQuerySlugType = {
   episode: string;
 };
 
+type DurationAsStringAndUrl = {
+  durationAsString: string;
+  url: string;
+};
+
 type EpisodeProps = {
-  episode: EpisodeType;
+  episode: EpisodeType & DurationAsStringAndUrl;
 };
 
 function Episode({ episode }: EpisodeProps) {
   return (
-    <>
-      <h1>
-        {styles}
-        {episode.thumbnail}
-      </h1>
-    </>
+    <div className={styles.episodeContainer}>
+      <div className={styles.thumbnail}>
+        <Link href="/">
+          <button type="button">
+            <img src="/arrow-left.svg" alt="Voltar" />
+          </button>
+        </Link>
+
+        <Image src={episode.thumbnail} alt={episode.title} width={700} height={160} objectFit="cover" />
+
+        <button type="button">
+          <img src="/play.svg" alt="Tocar" />
+        </button>
+      </div>
+
+      <header>
+        <h1>{episode.title}</h1>
+        <span>{episode.members}</span>
+        <span>{episode.published_at}</span>
+        <span>{episode.durationAsString}</span>
+      </header>
+
+      {/* <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }} /> */}
+      <div className={styles.description}>
+        {episode.description.split("</p>").map((e, _i, a) => {
+          const n = a.length - 1;
+          const string = e.replace("<p>", "");
+          delete a[n];
+          return <p key={Math.random()}>{string}</p>;
+        })}
+      </div>
+    </div>
   );
 }
+
+const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking" // blocking
+  };
+};
 
 const getStaticProps: GetStaticProps = async (context) => {
   const { episode } = context.params as EpisodeQuerySlugType;
@@ -52,4 +92,4 @@ const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export default Episode;
-export { getStaticProps };
+export { getStaticProps, getStaticPaths };

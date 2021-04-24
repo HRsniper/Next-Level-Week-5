@@ -40,7 +40,7 @@ function Home({ allEpisodes, latestEpisodes }: HomeProps) {
                 </div>
 
                 <button type="button">
-                  <img src="play-green.svg" alt="Tocar" />
+                  <img src="/play-green.svg" alt="Tocar" />
                 </button>
               </li>
             );
@@ -77,7 +77,7 @@ function Home({ allEpisodes, latestEpisodes }: HomeProps) {
                   <td>{episode.durationAsString}</td>
                   <td>
                     <button type="button">
-                      <img src="play-green.svg" alt="Tocar" />
+                      <img src="/play-green.svg" alt="Tocar" />
                     </button>
                   </td>
                 </tr>
