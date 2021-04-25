@@ -8,8 +8,8 @@ import { api } from "../../services/api";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 import styles from "./styles.module.scss";
 
-type EpisodeQuerySlugType = {
-  episode: string;
+type QuerySlugType = {
+  querySlug: string;
 };
 
 type DurationAsStringAndUrl = {
@@ -66,13 +66,13 @@ const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const getStaticProps: GetStaticProps = async (context) => {
-  const { episode } = context.params as EpisodeQuerySlugType;
+  const { querySlug } = context.params as QuerySlugType;
 
-  const { data } = await api.get(`/episodes/${episode}`, {});
+  const { data } = await api.get(`/episodes/${querySlug}`, {});
 
   const dataTyped = data as EpisodeType;
 
-  const episodeSlug = {
+  const episode = {
     id: dataTyped.id,
     title: dataTyped.title,
     members: dataTyped.members,
@@ -85,7 +85,7 @@ const getStaticProps: GetStaticProps = async (context) => {
   };
 
   return {
-    props: { episode: episodeSlug },
+    props: { episode: episode },
     //          60 * 60 * 24 * 30 = 1 mes
     revalidate: 60 * 60 * 24 * 30
   };
