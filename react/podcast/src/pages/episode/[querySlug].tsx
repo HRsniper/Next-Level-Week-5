@@ -51,7 +51,7 @@ function Episode({ episode }: EpisodeProps) {
           const n = a.length - 1;
           const string = e.replace("<p>", "");
           delete a[n];
-          return <p key={Math.random()}>{string}</p>;
+          return <p key={`p_${Math.random()}`}>{string}</p>;
         })}
       </div>
     </div>
@@ -59,9 +59,28 @@ function Episode({ episode }: EpisodeProps) {
 }
 
 const getStaticPaths: GetStaticPaths = async () => {
+  const { data } = await api.get("episodes", {
+    params: {
+      _limit: 2,
+      _sort: "published_at",
+      _order: "desc"
+    }
+  });
+
+  const dataTyped = data as EpisodeType[];
+
+  const paths = dataTyped.map((episode) => {
+    return {
+      params: {
+        querySlug: episode.id
+      }
+    };
+  });
+
   return {
-    paths: [],
-    fallback: "blocking" // blocking
+    paths,
+    fallback: "blocking" // fallback passado para server node do next, que somente carregar a pagina
+    //                      quando estiver pronta, sem a necessidade do router.isFallback
   };
 };
 
