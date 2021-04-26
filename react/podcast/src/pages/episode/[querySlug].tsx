@@ -1,9 +1,11 @@
 import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { EpisodeType } from "../../@types/episode";
+import { usePlayerContext } from "../../contexts/PlayerContext";
 import { api } from "../../services/api";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 import styles from "./styles.module.scss";
@@ -12,49 +14,56 @@ type QuerySlugType = {
   querySlug: string;
 };
 
-type DurationAsStringAndUrl = {
+type DurationAsStringType = {
   durationAsString: string;
-  url: string;
 };
 
 type EpisodeProps = {
-  episode: EpisodeType & DurationAsStringAndUrl;
+  episode: EpisodeType & DurationAsStringType;
 };
 
 function Episode({ episode }: EpisodeProps) {
+  const { play } = usePlayerContext();
+
   return (
-    <div className={styles.episodeContainer}>
-      <div className={styles.thumbnail}>
-        <Link href="/">
-          <button type="button">
-            <img src="/arrow-left.svg" alt="Voltar" />
+    <>
+      <Head>
+        <title>{episode.title} | Podcast</title>
+      </Head>
+
+      <div className={styles.episodeContainer}>
+        <div className={styles.thumbnail}>
+          <Link href="/">
+            <button type="button">
+              <img src="/arrow-left.svg" alt="Voltar" />
+            </button>
+          </Link>
+
+          <Image src={episode.thumbnail} alt={episode.title} width={700} height={160} objectFit="cover" />
+
+          <button type="button" onClick={() => play(episode)}>
+            <img src="/play.svg" alt="Tocar" />
           </button>
-        </Link>
+        </div>
 
-        <Image src={episode.thumbnail} alt={episode.title} width={700} height={160} objectFit="cover" />
+        <header>
+          <h1>{episode.title}</h1>
+          <span>{episode.members}</span>
+          <span>{episode.published_at}</span>
+          <span>{episode.durationAsString}</span>
+        </header>
 
-        <button type="button">
-          <img src="/play.svg" alt="Tocar" />
-        </button>
+        {/* <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }} /> */}
+        <div className={styles.description}>
+          {episode.description.split("</p>").map((e, _i, a) => {
+            const n = a.length - 1;
+            const string = e.replace("<p>", "");
+            delete a[n];
+            return <p key={`p_${Math.random()}`}>{string}</p>;
+          })}
+        </div>
       </div>
-
-      <header>
-        <h1>{episode.title}</h1>
-        <span>{episode.members}</span>
-        <span>{episode.published_at}</span>
-        <span>{episode.durationAsString}</span>
-      </header>
-
-      {/* <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }} /> */}
-      <div className={styles.description}>
-        {episode.description.split("</p>").map((e, _i, a) => {
-          const n = a.length - 1;
-          const string = e.replace("<p>", "");
-          delete a[n];
-          return <p key={`p_${Math.random()}`}>{string}</p>;
-        })}
-      </div>
-    </div>
+    </>
   );
 }
 

@@ -24,7 +24,7 @@
   footer {
     align-self: stretch;
 
-    &.emptyFooter {
+    &.emptyFooter .progress {
       opacity: 0.5;
     }
   }
@@ -78,12 +78,59 @@
     background: transparent;
     border: 0;
     font-size: 0; // centralizar img dentro do button
+    transition: filter 0.2s ease;
 
     &.playButton {
       width: 4rem;
       height: 4rem;
       border-radius: 1rem;
       background: var(--purple-400);
+
+      &:hover:not(:disabled) {
+        filter: brightness(0.95);
+      }
     }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.7);
+    }
+
+    &.isActive {
+      filter: invert(0.35) sepia(1) saturate(3) hue-rotate(100deg);
+
+      &:hover {
+        filter: brightness(0.6) invert(0.35) sapia(1) saturate(3) hue-rotate(100deg);
+      }
+    }
+  }
+}
+
+.currentEpisode {
+  text-align: center;
+  // padding-top: 1.5rem;
+
+  img {
+    border-radius: 1.5rem;
+    // height: 34vh;
+  }
+
+  strong {
+    display: block;
+    margin-top: 2rem;
+    font: 600 1.25rem Lexend, sans-serif;
+    line-height: 1.75rem;
+  }
+
+  span {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+    line-height: 1.5rem;
   }
 }

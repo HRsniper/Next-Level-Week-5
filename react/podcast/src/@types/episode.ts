@@ -12,6 +12,8 @@ type EpisodeType = {
   thumbnail: string;
   description: string;
   file: FileType;
+  duration: number;
+  url: string;
 };
 
 export type { EpisodeType };
